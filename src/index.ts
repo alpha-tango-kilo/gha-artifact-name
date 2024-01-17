@@ -9,14 +9,19 @@ import * as YAML from "yaml";
  * Map GitHub workflow cosmetic names (defined within the file) to their file names
  */
 async function discoverWorkflows(): Promise<Map<string, string>> {
-    let map = new Map();
+    const map = new Map();
     for await (const workflow_path of new Glob(
         ".github/workflows/*.y?(a)ml",
         {},
     )) {
-        let file_text = await fs.readFile(workflow_path, { encoding: "utf-8" });
-        let workflow_yaml = YAML.parse(file_text);
-        if (workflow_yaml !== null && workflow_yaml.hasOwnProperty("name")) {
+        const file_text = await fs.readFile(workflow_path, {
+            encoding: "utf-8",
+        });
+        const workflow_yaml = YAML.parse(file_text);
+        if (
+            workflow_yaml !== null &&
+            Object.prototype.hasOwnProperty.call(workflow_yaml, "name")
+        ) {
             const cosmetic_name = workflow_yaml.name;
             const short_name = path.parse(workflow_path).name;
             core.debug(`${cosmetic_name} -> ${short_name}`);
