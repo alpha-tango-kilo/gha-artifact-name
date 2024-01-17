@@ -22,7 +22,7 @@ async function discoverWorkflows(): Promise<Map<string, string>> {
             workflowYaml !== null &&
             Object.prototype.hasOwnProperty.call(workflowYaml, "name")
         ) {
-            const cosmeticName = workflowYaml.name;
+            const cosmeticName: string = workflowYaml.name;
             const shortName = path.parse(workflowPath).name;
             core.debug(`${cosmeticName} -> ${shortName}`);
             map.set(cosmeticName, shortName);

@@ -4,9 +4,9 @@
     "description": "Generate pleasing GitHub Action artifact names that match the workflow & run",
     "main": "index.js",
     "scripts": {
-        "build": "ncc build src/index.ts",
+        "build": "ncc build --minify src/index.ts",
         "run": "ncc run src/index.ts",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "tsc": "tsc --noEmit"
     },
     "keywords": [],
     "author": "alpha-tango-kilo <git@heyatk.com>",
