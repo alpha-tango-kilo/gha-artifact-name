@@ -1,24 +1,24 @@
 {
-  "name": "gha-artifact-name",
-  "version": "1.0.0",
-  "description": "Generate pleasing GitHub Action artifact names that match the workflow & run",
-  "main": "index.js",
-  "scripts": {
-    "build": "ncc build src/index.ts",
-    "run": "ncc run src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "alpha-tango-kilo <git@heyatk.com>",
-  "license": "MIT",
-  "dependencies": {
-    "@actions/core": "^1.10.1",
-    "glob": "^10.3.10",
-    "yaml": "^2.3.4"
-  },
-  "devDependencies": {
-    "@types/node": "^20.11.4",
-    "@vercel/ncc": "^0.38.1",
-    "typescript": "^5.3.3"
-  }
+    "name": "gha-artifact-name",
+    "version": "1.0.0",
+    "description": "Generate pleasing GitHub Action artifact names that match the workflow & run",
+    "main": "index.js",
+    "scripts": {
+        "build": "ncc build src/index.ts",
+        "run": "ncc run src/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "alpha-tango-kilo <git@heyatk.com>",
+    "license": "AGPL-3.0-only",
+    "dependencies": {
+        "@actions/core": "^1.10.1",
+        "glob": "^10.3.10",
+        "yaml": "^2.3.4"
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.4",
+        "@vercel/ncc": "^0.38.1",
+        "typescript": "^5.3.3"
+    }
 }
