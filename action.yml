@@ -1,6 +1,10 @@
 name: Generate artifact name
 description: Generate a pleasing artifact name that matches the workflow & run
 
+branding:
+  icon: archive
+  color: green
+
 inputs:
   repo_name:
     description: "Pretty name for the project/repository"
