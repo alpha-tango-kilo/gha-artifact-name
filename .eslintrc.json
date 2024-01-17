@@ -7,6 +7,9 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended"
     ],
+    "rules": {
+        "@typescript-eslint/naming-convention": "warn"
+    },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",

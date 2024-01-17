@@ -10,24 +10,24 @@ import * as YAML from "yaml";
  */
 async function discoverWorkflows(): Promise<Map<string, string>> {
     const map = new Map();
-    for await (const workflow_path of new Glob(
+    for await (const workflowPath of new Glob(
         ".github/workflows/*.y?(a)ml",
         {},
     )) {
-        const file_text = await fs.readFile(workflow_path, {
+        const fileText = await fs.readFile(workflowPath, {
             encoding: "utf-8",
         });
-        const workflow_yaml = YAML.parse(file_text);
+        const workflowYaml = YAML.parse(fileText);
         if (
-            workflow_yaml !== null &&
-            Object.prototype.hasOwnProperty.call(workflow_yaml, "name")
+            workflowYaml !== null &&
+            Object.prototype.hasOwnProperty.call(workflowYaml, "name")
         ) {
-            const cosmetic_name = workflow_yaml.name;
-            const short_name = path.parse(workflow_path).name;
-            core.debug(`${cosmetic_name} -> ${short_name}`);
-            map.set(cosmetic_name, short_name);
+            const cosmeticName = workflowYaml.name;
+            const shortName = path.parse(workflowPath).name;
+            core.debug(`${cosmeticName} -> ${shortName}`);
+            map.set(cosmeticName, shortName);
         } else {
-            core.warning(`Couldn't read name from ${workflow_path}`);
+            core.warning(`Couldn't read name from ${workflowPath}`);
         }
     }
     core.debug(`Discovered ${map.size} workflows`);

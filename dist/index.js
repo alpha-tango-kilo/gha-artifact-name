@@ -29228,18 +29228,21 @@ const YAML = __importStar(__nccwpck_require__(4083));
  * Map GitHub workflow cosmetic names (defined within the file) to their file names
  */
 async function discoverWorkflows() {
-    let map = new Map();
-    for await (const workflow_path of new glob_1.Glob(".github/workflows/*.y?(a)ml", {})) {
-        let file_text = await promises_1.default.readFile(workflow_path, { encoding: "utf-8" });
-        let workflow_yaml = YAML.parse(file_text);
-        if (workflow_yaml !== null && workflow_yaml.hasOwnProperty("name")) {
-            const cosmetic_name = workflow_yaml.name;
-            const short_name = path.parse(workflow_path).name;
-            core.debug(`${cosmetic_name} -> ${short_name}`);
-            map.set(cosmetic_name, short_name);
+    const map = new Map();
+    for await (const workflowPath of new glob_1.Glob(".github/workflows/*.y?(a)ml", {})) {
+        const fileText = await promises_1.default.readFile(workflowPath, {
+            encoding: "utf-8",
+        });
+        const workflowYaml = YAML.parse(fileText);
+        if (workflowYaml !== null &&
+            Object.prototype.hasOwnProperty.call(workflowYaml, "name")) {
+            const cosmeticName = workflowYaml.name;
+            const shortName = path.parse(workflowPath).name;
+            core.debug(`${cosmeticName} -> ${shortName}`);
+            map.set(cosmeticName, shortName);
         }
         else {
-            core.warning(`Couldn't read name from ${workflow_path}`);
+            core.warning(`Couldn't read name from ${workflowPath}`);
         }
     }
     core.debug(`Discovered ${map.size} workflows`);
@@ -29247,7 +29250,8 @@ async function discoverWorkflows() {
 }
 (async function main() {
     const workflowMap = await discoverWorkflows();
-    const repoName = core.getInput("repo_name");
+    // Fallback to GitHub repository name if no cosmetic name is given
+    const repoName = core.getInput("repo_name") || github.context.repo.repo;
     // TODO: runAttempt is not yet in a published version of @actions/github
     // It was merged into main 2023/11/28: https://github.com/actions/toolkit/commit/faa425440f86f9c16587a19dfb59491253a2c92a
     let currentWorkflow = workflowMap.get(github.context.workflow);
