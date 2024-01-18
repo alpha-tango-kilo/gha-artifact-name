@@ -29,7 +29,7 @@ steps:
   id: artifact-name
   uses: alpha-tango-kilo/gha-artifact-name@v1
   with:
-    repo_name: My Cool Project
+    repo-name: My Cool Project
 - name: Upload build artifact
   uses: actions/upload-artifact@v4
   with:
@@ -44,9 +44,27 @@ After the action has been run, `${{ steps.artifact-name.outputs.artifact-name }}
 
 All example values and generated artifact names are based on [this run](https://github.com/GloriousEggroll/proton-ge-custom/actions/runs/7457239085) from Proton GE
 
-| Option name 	| Description                                                  	| Default value        	| Example value 	| Artifact name        	|
-|-------------	|--------------------------------------------------------------	|----------------------	|---------------	|----------------------	|
-| `repo-name` 	| Overwrites the GitHub repository name for something prettier 	| The GitHub repo name 	| Proton GE     	| Proton GE release#42 	|
+| Option name 	| Description                                                  	| Default value        	| Example value  	| Artifact name             	|
+|-------------	|--------------------------------------------------------------	|----------------------	|----------------	|---------------------------	|
+| `repo-name` 	| Overwrites the GitHub repository name for something prettier 	| The GitHub repo name 	| Proton GE      	| Proton GE release#42      	|
+| `overrides` 	| Overwrites workflow short names                              	| Empty                	| release: build 	| proton-ge-custom build#42 	|
+
+#### Overrides
+
+`overrides` can be set to override the short names that would otherwise automatically be chosen for workflows.
+Note that this has to be a string because GitHub doesn't support YAML documents as Action inputs
+
+Example:
+
+```yml
+- name: Generate artifact name
+  id: artifact-name
+  uses: alpha-tango-kilo/gha-artifact-name@v1
+  with:
+    overrides: |
+      release: build
+      devel: dev
+```
 
 ## Did you really have to create a GitHub action out of this?
 
