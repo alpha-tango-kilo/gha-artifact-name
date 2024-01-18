@@ -2,7 +2,7 @@
 
 **Generate pleasing artifact names that match the workflow & run**
 
-For example, [this run](https://github.com/GloriousEggroll/proton-ge-custom/actions/runs/7457239085) would generate the artifact name `proton-ge-custom release#42`, because it is the fourty-second run of the `release.yml` workflow in the `proton-ge-custom` repository.
+For example, [this build of Proton GE](https://github.com/GloriousEggroll/proton-ge-custom/actions/runs/7457239085) would generate the artifact name `proton-ge-custom release#42`, because it is the fourty-second run of the `release.yml` workflow in the `proton-ge-custom` repository.
 Naturally, certain elements of this name can be adjusted through [configuration](#all-your-options)
 
 ## Why does this exist?
@@ -47,3 +47,9 @@ All example values and generated artifact names are based on [this run](https://
 | Option name 	| Description                                                  	| Default value        	| Example value 	| Artifact name        	|
 |-------------	|--------------------------------------------------------------	|----------------------	|---------------	|----------------------	|
 | `repo-name` 	| Overwrites the GitHub repository name for something prettier 	| The GitHub repo name 	| Proton GE     	| Proton GE release#42 	|
+
+## Did you really have to create a GitHub action out of this?
+
+No, you can get 90% of the way there with a simple bash script within a workflow.
+This just isn't as clean, requiring copy-pasting between workflows, and also needs each workflow's name to be hardcoded in.
+For this interested, the Bash snippet can be seen [here](https://gist.github.com/alpha-tango-kilo/9afd0f78b75ba3a2808de2c84a7fbfff)
