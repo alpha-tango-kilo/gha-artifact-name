@@ -1,0 +1,33 @@
+name: Did you remember to build?
+
+on:
+  push:
+    paths:
+      - src/**
+      - package.json
+      - package-lock.json
+      - .github/workflows/forgetfulness.yml
+
+jobs:
+  check-dist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Checkout ${{ github.ref_name }}
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref_name }}
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        cache: npm
+    - name: Install dependencies
+      run: npm ci
+    - name: Run build
+      run: npm run build
+    - name: Check for diffs
+      run: |
+        if ! git diff --check dist/index.js; then
+          echo "::error file=dist/index.js,title=Didn't run build::You silly goose, you forgot to build before committing"
+          exit 1
+        fi
