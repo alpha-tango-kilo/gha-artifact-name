@@ -46,4 +46,4 @@ All example values and generated artifact names are based on [this run](https://
 
 | Option name 	| Description                                                  	| Default value        	| Example value 	| Artifact name        	|
 |-------------	|--------------------------------------------------------------	|----------------------	|---------------	|----------------------	|
-| `repo_name` 	| Overwrites the GitHub repository name for something prettier 	| The GitHub repo name 	| Proton GE     	| Proton GE release#42 	|
+| `repo-name` 	| Overwrites the GitHub repository name for something prettier 	| The GitHub repo name 	| Proton GE     	| Proton GE release#42 	|

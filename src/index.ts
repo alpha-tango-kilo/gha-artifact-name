@@ -37,7 +37,7 @@ async function discoverWorkflows(): Promise<Map<string, string>> {
 (async function main(): Promise<void> {
     const workflowMap = await discoverWorkflows();
     // Fallback to GitHub repository name if no cosmetic name is given
-    const repoName = core.getInput("repo_name") || github.context.repo.repo;
+    const repoName = core.getInput("repo-name") || github.context.repo.repo;
     // TODO: runAttempt is not yet in a published version of @actions/github
     // It was merged into main 2023/11/28: https://github.com/actions/toolkit/commit/faa425440f86f9c16587a19dfb59491253a2c92a
     let currentWorkflow = workflowMap.get(github.context.workflow);
@@ -47,6 +47,6 @@ async function discoverWorkflows(): Promise<Map<string, string>> {
     }
     const artifactName = `${repoName} ${currentWorkflow}#${github.context.runNumber}`;
     core.debug(`artifact name: ${artifactName}`);
-    core.setOutput("artifact_name", artifactName);
+    core.setOutput("artifact-name", artifactName);
     core.exportVariable("ARTIFACT_NAME", artifactName);
 })();
