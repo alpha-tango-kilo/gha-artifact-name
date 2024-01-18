@@ -9,6 +9,9 @@ inputs:
   repo-name:
     description: "Pretty name for the project/repository"
     required: false
+  overrides:
+    description: "Override names for certain workflows"
+    required: false
 
 runs:
   using: node20

@@ -8,13 +8,16 @@ import * as YAML from "yaml";
 /**
  * Map GitHub workflow cosmetic names (defined within the file) to their file names
  */
-async function discoverWorkflows(): Promise<Map<string, string>> {
+async function discoverWorkflows(
+    overrides: Map<string, string>,
+): Promise<Map<string, string>> {
     const map = new Map();
-    for await (const workflowPath of new Glob(
+    for await (const workflowPathString of new Glob(
         ".github/workflows/*.y?(a)ml",
         {},
     )) {
-        const fileText = await fs.readFile(workflowPath, {
+        const workflowPath = path.parse(workflowPathString);
+        const fileText = await fs.readFile(workflowPathString, {
             encoding: "utf-8",
         });
         const workflowYaml = YAML.parse(fileText);
@@ -22,20 +25,42 @@ async function discoverWorkflows(): Promise<Map<string, string>> {
             workflowYaml !== null &&
             Object.prototype.hasOwnProperty.call(workflowYaml, "name")
         ) {
-            const cosmeticName: string = workflowYaml.name;
-            const shortName = path.parse(workflowPath).name;
+            const shortName = workflowPath.name;
+            const cosmeticName: string =
+                overrides.get(shortName) || workflowYaml.name;
             core.debug(`${cosmeticName} -> ${shortName}`);
             map.set(cosmeticName, shortName);
         } else {
-            core.warning(`Couldn't read name from ${workflowPath}`);
+            core.warning(`Couldn't read name from ${workflowPathString}`);
         }
     }
     core.debug(`Discovered ${map.size} workflows`);
     return map;
 }
 
+/**
+ * Get user overrides, specified as "file stem: short name", e.g. "release: build"
+ */
+function getOverrides(): Map<string, string> {
+    const overrides = new Map();
+    const overridesInput = core.getMultilineInput("overrides") || [];
+    for (const override of overridesInput) {
+        const [fileRaw, nameRaw] = override.split(":", 1);
+        const file = fileRaw.trim();
+        const name = nameRaw.trim();
+        if (file.endsWith(".yml") || file.endsWith(".yaml")) {
+            core.warning(
+                `override file "${fileRaw}" has an unnecessary extension, and probably won't match`,
+            );
+        }
+        overrides.set(file, name);
+    }
+    return overrides;
+}
+
 (async function main(): Promise<void> {
-    const workflowMap = await discoverWorkflows();
+    const overrides = getOverrides();
+    const workflowMap = await discoverWorkflows(overrides);
     // Fallback to GitHub repository name if no cosmetic name is given
     const repoName = core.getInput("repo-name") || github.context.repo.repo;
     // TODO: runAttempt is not yet in a published version of @actions/github
