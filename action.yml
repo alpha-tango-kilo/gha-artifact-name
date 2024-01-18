@@ -6,7 +6,7 @@ branding:
   color: green
 
 inputs:
-  repo_name:
+  repo-name:
     description: "Pretty name for the project/repository"
     required: false
 
