@@ -28,13 +28,13 @@ async function discoverWorkflows(
             const shortName = workflowPath.name;
             const cosmeticName: string =
                 overrides.get(shortName) || workflowYaml.name;
-            core.debug(`${cosmeticName} -> ${shortName}`);
+            core.debug(`discovered workflow: ${cosmeticName} -> ${shortName}`);
             map.set(cosmeticName, shortName);
         } else {
             core.warning(`Couldn't read name from ${workflowPathString}`);
         }
     }
-    core.debug(`Discovered ${map.size} workflows`);
+    core.debug(`discovered ${map.size} workflows`);
     return map;
 }
 
@@ -50,28 +50,35 @@ function getOverrides(): Map<string, string> {
         const name = nameRaw.trim();
         if (file.endsWith(".yml") || file.endsWith(".yaml")) {
             core.warning(
-                `override file "${fileRaw}" has an unnecessary extension, and probably won't match`,
+                `Override file "${fileRaw}" has an unnecessary extension, and probably won't match`,
             );
         }
+        core.debug(`added override: ${file} -> ${name}`);
         overrides.set(file, name);
     }
+    core.debug(`found ${overrides.size} overrides`);
     return overrides;
 }
 
 (async function main(): Promise<void> {
+    core.debug("hello gha-artifact-name");
+    core.debug("getting overrides");
     const overrides = getOverrides();
+    core.debug("discovering workflows");
     const workflowMap = await discoverWorkflows(overrides);
+
+    core.debug("generating name");
     // Fallback to GitHub repository name if no cosmetic name is given
     const repoName = core.getInput("repo-name") || github.context.repo.repo;
     // TODO: runAttempt is not yet in a published version of @actions/github
     // It was merged into main 2023/11/28: https://github.com/actions/toolkit/commit/faa425440f86f9c16587a19dfb59491253a2c92a
     let currentWorkflow = workflowMap.get(github.context.workflow);
     if (currentWorkflow === undefined) {
-        core.warning(`unrecognised workflow "${github.context.workflow}"`);
+        core.warning(`Unrecognised workflow "${github.context.workflow}"`);
         currentWorkflow = "unknown";
     }
     const artifactName = `${repoName} ${currentWorkflow}#${github.context.runNumber}`;
-    core.debug(`artifact name: ${artifactName}`);
+    console.log(`artifact name: ${artifactName}`);
     core.setOutput("artifact-name", artifactName);
     core.exportVariable("ARTIFACT_NAME", artifactName);
 })();
