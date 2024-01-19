@@ -44,7 +44,9 @@ async function discoverWorkflows(
 function getOverrides(): Map<string, string> {
     const overrides = new Map();
     const overridesInput = core.getMultilineInput("overrides") || [];
+    core.debug(`overrides: ${overrides}`);
     for (const line of overridesInput) {
+        core.debug(`line: ${line}`);
         if (!line.includes(":")) continue;
         const [fileRaw, nameRaw] = line.split(":", 1);
         const file = fileRaw.trim();
