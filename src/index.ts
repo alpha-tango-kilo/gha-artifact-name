@@ -25,9 +25,9 @@ async function discoverWorkflows(
             workflowYaml !== null &&
             Object.prototype.hasOwnProperty.call(workflowYaml, "name")
         ) {
-            const shortName = workflowPath.name;
-            const cosmeticName: string =
-                overrides.get(shortName) || workflowYaml.name;
+            const shortName =
+                overrides.get(workflowPath.name) || workflowPath.name;
+            const cosmeticName: string = workflowYaml.name;
             core.debug(`discovered workflow: ${cosmeticName} -> ${shortName}`);
             map.set(cosmeticName, shortName);
         } else {
