@@ -48,7 +48,7 @@ function getOverrides(): Map<string, string> {
     for (const line of overridesInput) {
         core.debug(`line: ${line}`);
         if (!line.includes(":")) continue;
-        const [fileRaw, nameRaw] = line.split(":", 1);
+        const [fileRaw, nameRaw] = line.split(":", 2);
         const file = fileRaw.trim();
         const name = nameRaw.trim();
         if (file.endsWith(".yml") || file.endsWith(".yaml")) {
