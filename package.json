@@ -1,6 +1,6 @@
 {
     "name": "gha-artifact-name",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "description": "Generate pleasing GitHub Action artifact names that match the workflow & run",
     "author": "alpha-tango-kilo <git@heyatk.com>",
     "homepage": "https://github.com/alpha-tango-kilo/gha-artifact-name",
