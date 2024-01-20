@@ -9,11 +9,12 @@ import * as YAML from "yaml";
  * Map GitHub workflow cosmetic names (defined within the file) to their file names
  */
 async function discoverWorkflows(
+    searchRoot: string,
     overrides: Map<string, string>,
 ): Promise<Map<string, string>> {
     const map = new Map();
     for await (const workflowPathString of new Glob(
-        ".github/workflows/*.y?(a)ml",
+        `${searchRoot}/*.y?(a)ml`,
         {},
     )) {
         const workflowPath = path.parse(workflowPathString);
@@ -61,12 +62,28 @@ function getOverrides(): Map<string, string> {
     return overrides;
 }
 
+/**
+ * Work out where to look for workflows
+ *
+ * Looks at input `repo-root`, falling back on $GITHUB_WORKSPACE and the
+ * current working directory, then appends `/.github/workflows`
+ */
+function getSearchRoot(): string {
+    const repoRoot =
+        core.getInput("repo-root") || process.env.GITHUB_WORKSPACE || ".";
+    core.debug(`appending .github/workflows to ${repoRoot}`);
+    return path.resolve(repoRoot, ".github/workflows");
+}
+
 (async function main(): Promise<void> {
     core.debug("hello gha-artifact-name");
+    core.debug("getting searchRoot");
+    const searchRoot = getSearchRoot();
+    core.debug(`searchRoot: ${searchRoot}`);
     core.debug("getting overrides");
     const overrides = getOverrides();
     core.debug("discovering workflows");
-    const workflowMap = await discoverWorkflows(overrides);
+    const workflowMap = await discoverWorkflows(searchRoot, overrides);
 
     core.debug("generating name");
     // Fallback to GitHub repository name if no cosmetic name is given

@@ -6,11 +6,14 @@ branding:
   color: green
 
 inputs:
+  repo-root:
+    description: Where a checkout of the repository exists
+    required: false
   repo-name:
-    description: "Pretty name for the project/repository"
+    description: Pretty name for the project/repository
     required: false
   overrides:
-    description: "Override names for certain workflows"
+    description: Override names for certain workflows
     required: false
 
 runs:

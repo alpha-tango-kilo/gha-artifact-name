@@ -44,10 +44,11 @@ After the action has been run, `${{ steps.artifact-name.outputs.artifact-name }}
 
 All example values and generated artifact names are based on [this run](https://github.com/GloriousEggroll/proton-ge-custom/actions/runs/7457239085) from Proton GE
 
-| Option name 	| Description                                                  	| Default value        	| Example value  	| Artifact name             	|
-|-------------	|--------------------------------------------------------------	|----------------------	|----------------	|---------------------------	|
-| `repo-name` 	| Overwrites the GitHub repository name for something prettier 	| The GitHub repo name 	| Proton GE      	| Proton GE release#42      	|
-| `overrides` 	| Overwrites workflow short names                              	| Empty                	| release: build 	| proton-ge-custom build#42 	|
+| Option name 	| Description                                                  	| Default value        	| Example value     	| Artifact name             	|
+|-------------	|--------------------------------------------------------------	|----------------------	|-------------------	|---------------------------	|
+| `repo-name` 	| Overwrites the GitHub repository name for something prettier 	| The GitHub repo name 	| Proton GE         	| Proton GE release#42      	|
+| `overrides` 	| Overwrites workflow short names                              	| Empty                	| release: build    	| proton-ge-custom build#42 	|
+| `repo-root` 	| Where the `.github` folder resides                           	| `$GITHUB_WORKSPACE`  	| ./branch-checkout 	| (unchanged)               	|
 
 #### Overrides
 
