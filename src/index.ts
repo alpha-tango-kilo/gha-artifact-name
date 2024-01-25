@@ -42,7 +42,7 @@ async function discoverWorkflows(
 /**
  * Get user overrides, specified as "file stem: short name", e.g. "release: build"
  */
-function getOverrides(): Map<string, string> {
+function parseOverridesInput(): Map<string, string> {
     const overrides = new Map();
     const overridesInput = core.getMultilineInput("overrides") || [];
     for (const line of overridesInput) {
@@ -63,6 +63,22 @@ function getOverrides(): Map<string, string> {
 }
 
 /**
+ * Loads overrides from a file. Performs no validation other than parsing as YAML
+ */
+async function loadOverridesFile(path: string): Promise<Map<string, string> | undefined> {
+    const fileText = await fs.readFile(path, {
+        encoding: "utf-8",
+    });
+    const overridesYaml = YAML.parse(fileText);
+    if (overridesYaml !== null) {
+        return new Map(Object.entries(overridesYaml));
+    } else {
+        core.warning(`${path} wasn't parseable, ignoring`);
+        return undefined;
+    }
+}
+
+/**
  * Work out where to look for workflows
  *
  * Looks at input `repo-root`, falling back on $GITHUB_WORKSPACE and the
@@ -77,11 +93,25 @@ function getSearchRoot(): string {
 
 (async function main(): Promise<void> {
     core.debug("hello gha-artifact-name");
+
     core.debug("getting searchRoot");
     const searchRoot = getSearchRoot();
     core.debug(`searchRoot: ${searchRoot}`);
-    core.debug("getting overrides");
-    const overrides = getOverrides();
+
+    core.debug("getting overrides from GitHub Action input");
+    const overridesFromInput = parseOverridesInput();
+    core.debug("getting overrides from file");
+    const overridesFile = core.getInput("overrides-file");
+    let overridesFromFile = undefined;
+    if (overridesFile) {
+        overridesFromFile = await loadOverridesFile(overridesFile);
+    }
+    core.debug("merging overrides from file & GitHub Action input");
+    // GitHub Action input takes precedent
+    const overrides = overridesFromFile
+        ? new Map([...overridesFromFile, ...overridesFromInput])
+        : overridesFromInput;
+
     core.debug("discovering workflows");
     const workflowMap = await discoverWorkflows(searchRoot, overrides);
 
