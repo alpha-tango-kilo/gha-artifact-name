@@ -86,7 +86,7 @@ async function loadOverridesFile(
  * Looks at input `repo-root`, falling back on $GITHUB_WORKSPACE and the
  * current working directory, then appends `/.github/workflows`
  */
-function getSearchRoot(): string {
+export function getSearchRoot(): string {
     const repoRoot =
         core.getInput("repo-root") || process.env.GITHUB_WORKSPACE || ".";
     core.debug(`appending .github/workflows to ${repoRoot}`);
