@@ -65,7 +65,7 @@ export function parseOverridesInput(): Map<string, string> {
 /**
  * Loads overrides from a file. Performs no validation other than parsing as YAML
  */
-async function loadOverridesFile(
+export async function loadOverridesFile(
     path: string,
 ): Promise<Map<string, string> | undefined> {
     const fileText = await fs.readFile(path, {

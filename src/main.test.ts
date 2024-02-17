@@ -1,6 +1,8 @@
 import { describe, expect, test, beforeEach, jest } from "@jest/globals";
 import * as core from "@actions/core";
-import { getSearchRoot, parseOverridesInput } from "./main";
+import * as fs from "fs";
+import * as tmp from "tmp";
+import { getSearchRoot, loadOverridesFile, parseOverridesInput } from "./main";
 
 // Mock the GitHub Actions core library
 jest.mock("@actions/core");
@@ -59,6 +61,34 @@ describe("parseOverridesInput", () => {
             return ["forgetfulness forgor", "heehee: hoho"];
         });
         expect(parseOverridesInput()).toEqual(new Map([["heehee", "hoho"]]));
+    });
+});
+
+describe("loadOverridesFile", () => {
+    function createOverridesFile(content: string): string {
+        const tempFile = tmp.fileSync();
+        fs.writeFileSync(tempFile.name, content);
+        return tempFile.name;
+    }
+
+    test("happy path", async () => {
+        const path = createOverridesFile("forgetfulness: forgor\nheehee: hoho");
+
+        expect(await loadOverridesFile(path)).toEqual(
+            new Map([
+                ["forgetfulness", "forgor"],
+                ["heehee", "hoho"],
+            ]),
+        );
+    });
+
+    test("file doesn't exist", async () => {
+        expect(await loadOverridesFile("/tmp/doesntexist")).toBeUndefined();
+    });
+
+    test("unparseable", async () => {
+        const path = createOverridesFile('println!("Hello world!");');
+        expect(await loadOverridesFile(path)).toBeUndefined();
     });
 });
 
