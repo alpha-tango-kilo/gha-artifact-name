@@ -72,3 +72,8 @@ Example:
 No, you can get 90% of the way there with a simple bash script within a workflow.
 This just isn't as clean, requiring copy-pasting between workflows, and also needs each workflow's name to be hardcoded in.
 For this interested, the Bash snippet can be seen [here](https://gist.github.com/alpha-tango-kilo/9afd0f78b75ba3a2808de2c84a7fbfff)
+
+## Node update policy
+
+Unless it specifically impacts the behaviour of this GitHub Action, updating node is only considered a minor version bump, not as breaking change / major version.
+To pin to a specific version of node, specify the minor version as well, or use a Git SHA.
